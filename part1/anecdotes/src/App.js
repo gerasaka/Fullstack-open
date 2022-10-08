@@ -14,6 +14,12 @@ const App = () => {
   const [selected, setSelected] = useState(0);
   const [points, setPoints] = useState(Array(7).fill(0));
 
+  let biggestVote = 0;
+
+  for (let i = 0; i < points.length; i++) {
+    if (points[i] > points[biggestVote]) biggestVote = i;
+  }
+
   function handleAnecdoteClick() {
     return setSelected(Math.floor(Math.random() * 6));
   }
@@ -29,10 +35,15 @@ const App = () => {
 
   return (
     <>
+      <h2>Anecdote of the day</h2>
       <div>{anecdotes[selected]}</div>
       <div>has {points[selected]} votes</div>
       <button onClick={handleVoteClick}>vote</button>
       <button onClick={handleAnecdoteClick}>next anecdote</button>
+
+      <h2>Anecdote with most votes</h2>
+      <div>{anecdotes[biggestVote]}</div>
+      <div>has {points[biggestVote]} votes</div>
     </>
   );
 };
