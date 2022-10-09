@@ -1,5 +1,7 @@
 import React from 'react';
 
-export const Total = ({ total }) => {
+export const Total = ({ parts }) => {
+  const total = parts.reduce((prev, curr) => prev + curr.exercises, 0);
+
   return <b>Total of {total} exercises</b>;
 };
