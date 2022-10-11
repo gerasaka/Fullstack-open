@@ -15,6 +15,14 @@ const CountryDetails = ({ country }) => {
           <li key={language}>{language}</li>
         ))}
       </ul>
+      <p>Currencies:</p>
+      <ul>
+        {Object.values(country.currencies).map(currency => (
+          <li key={currency.name}>
+            {currency.name} ( {currency.symbol} )
+          </li>
+        ))}
+      </ul>
     </>
   );
 };

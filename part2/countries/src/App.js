@@ -30,7 +30,10 @@ const App = () => {
       {query === '' ? (
         <p>Start typing to search</p>
       ) : (
-        <CountryList countries={filteredCountries} />
+        <CountryList
+          countries={filteredCountries}
+          setCountry={setFilteredCountries}
+        />
       )}
     </>
   );
