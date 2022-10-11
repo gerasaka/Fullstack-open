@@ -44,7 +44,10 @@ const App = () => {
     }
 
     const newPerson = { name: newName, number: newNumber, id: +new Date() };
-    setPersons(persons.concat(newPerson));
+
+    axios
+      .post('http://localhost:3333/persons', newPerson)
+      .then(res => setPersons(persons.concat(res.data)));
   };
 
   const filteredContacts = persons.filter(person =>
