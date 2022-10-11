@@ -13,6 +13,10 @@ const deleteContact = id => {
   return axios.delete(`${baseUrl}/${id}`);
 };
 
-const phonebook = { getContacts, addContact, deleteContact };
+const updateContact = contact => {
+  return axios.put(`${baseUrl}/${contact.id}`, contact).then(res => res.data);
+};
+
+const phonebook = { getContacts, addContact, deleteContact, updateContact };
 
 export default phonebook;

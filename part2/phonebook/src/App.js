@@ -33,7 +33,16 @@ const App = () => {
 
     for (let i = 0; i < persons.length; i++) {
       if (persons[i].name === newName) {
-        return alert(`${newName} is already added to phonebook`);
+        if (persons[i].number === newNumber) {
+          return alert(`${newName} is already added to phonebook`);
+        }
+
+        const validateUpdate = window.confirm(
+          `${persons[i].name} is already added, update phone number?`
+        );
+
+        if (validateUpdate) return updateContactHandler(persons[i]);
+        return;
       }
 
       if (persons[i].number === newNumber) {
@@ -48,12 +57,22 @@ const App = () => {
       .then(res => setPersons(persons.concat(res)));
   };
 
+  const updateContactHandler = contact => {
+    const newContact = { ...contact, number: newNumber };
+
+    phonebook
+      .updateContact(newContact)
+      .then(res =>
+        setPersons(persons.map(person => (person.id === res.id ? res : person)))
+      );
+  };
+
   const deleteContactHandler = contact => {
-    const validate = window.confirm(
+    const validateDelete = window.confirm(
       `Delete ${contact.name}? This can't be undone`
     );
 
-    if (validate) {
+    if (validateDelete) {
       phonebook
         .deleteContact(contact.id)
         .then(() =>
