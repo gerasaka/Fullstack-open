@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import axios from 'axios';
+import phonebook from './services/phonebook';
 
-import { ContactForm } from './components/ContactForm';
-import { Contacts } from './components/Contacts';
-import { Filter } from './components/Filter';
+import ContactForm from './components/ContactForm';
+import Contacts from './components/Contacts';
+import Filter from './components/Filter';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -13,9 +13,7 @@ const App = () => {
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:3333/persons').then(res => {
-      setPersons(res.data);
-    });
+    phonebook.getContacts().then(res => setPersons(res));
   }, []);
 
   const handleNameChange = e => {
@@ -30,7 +28,7 @@ const App = () => {
     setQuery(e.target.value);
   };
 
-  const addContact = e => {
+  const addContactHandler = e => {
     e.preventDefault();
 
     for (let i = 0; i < persons.length; i++) {
@@ -45,9 +43,23 @@ const App = () => {
 
     const newPerson = { name: newName, number: newNumber, id: +new Date() };
 
-    axios
-      .post('http://localhost:3333/persons', newPerson)
-      .then(res => setPersons(persons.concat(res.data)));
+    phonebook
+      .addContact(newPerson)
+      .then(res => setPersons(persons.concat(res)));
+  };
+
+  const deleteContactHandler = contact => {
+    const validate = window.confirm(
+      `Delete ${contact.name}? This can't be undone`
+    );
+
+    if (validate) {
+      phonebook
+        .deleteContact(contact.id)
+        .then(() =>
+          setPersons(persons.filter(person => person.id !== contact.id))
+        );
+    }
   };
 
   const filteredContacts = persons.filter(person =>
@@ -62,11 +74,14 @@ const App = () => {
       <h3>Add a new contact</h3>
       <ContactForm
         value={{ newName, newNumber }}
-        handler={{ handleNameChange, handleNumberChange, addContact }}
+        handler={{ handleNameChange, handleNumberChange, addContactHandler }}
       />
 
       <h3>Numbers</h3>
-      <Contacts contacts={filteredContacts} />
+      <Contacts
+        contacts={filteredContacts}
+        deleteContact={deleteContactHandler}
+      />
     </div>
   );
 };

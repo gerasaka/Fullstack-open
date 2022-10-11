@@ -7,3 +7,5 @@ export const Filter = ({ query, handler }) => {
     </div>
   );
 };
+
+export default Filter;
